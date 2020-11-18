@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class Booking implements  ITestable{
     private Date date;

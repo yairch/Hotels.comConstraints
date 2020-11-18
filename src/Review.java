@@ -34,9 +34,6 @@ public class Review implements  ITestable{
     }
 
     public static boolean checkAllIntancesConstraints(Model model){
-
-        for (Review review : model)
-
         return true;
     }
 

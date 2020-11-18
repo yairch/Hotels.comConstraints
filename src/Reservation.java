@@ -1,5 +1,4 @@
 import java.util.Date;
-import java.util.ArrayList;
 
 public class Reservation implements  ITestable {
     private int id;
