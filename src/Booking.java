@@ -55,10 +55,36 @@ public class Booking implements  ITestable{
 
     @Override
     public boolean checkConstraints() {
+        //constraint 3
+        if(!(room.getHotel().getName()).equals(reservation.getReservationSet().getHotel().getName())){
+            return false;
+        }
+
+        //constraint 13
+        for (HotelService hotelService: services){
+            if (!(hotelService.getHotel().getName().equals(reservation.getReservationSet().getHotel().getName()))){
+                return false;
+            }
+        }
+
+
+
+
+
         return true;
     }
 
     public static boolean checkAllIntancesConstraints(Model model){
-        return true;
+        boolean flag = true;
+        for (Object obj : model.allObjects)
+        {
+            if(obj instanceof Booking){
+                if(!((Booking)obj).checkConstraints()){
+                    flag=false;
+                }
+            }
+        }
+        return flag;
+
     }
 }

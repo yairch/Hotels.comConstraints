@@ -74,7 +74,7 @@ public class Client implements  ITestable {
 
 
         // A client who ordered a VIP service a obliged to add a review on the hotel
-        boolean addedVipReview = true;
+       /* boolean addedVipReview = true;
         for (ReservationSet reservationSet : this.getReservationsHistory().values()){
             for (Reservation reservation : reservationSet.getReservations()){
 
@@ -95,7 +95,27 @@ public class Client implements  ITestable {
                 break;
         }
 
-        return bookedVipRoom && addedVipReview;
+        return bookedVipRoom && addedVipReview;*/
+
+        //constraint 2
+        int count =0;
+        for(ReservationSet reservationSet:reservationsHistory.values()){
+            count=0;
+            if(reservationSet.getReservations().size()>=5){
+                for(Reservation reservation : reservationSet.getReservations()){
+                    if((reservation.getBookings().getRoom().getRoomCategory().getType()).equals("VIP")){
+                        count++;
+                    }
+                }
+                if (count<1){
+                    return false;
+                }
+            }
+
+        }
+
+        return true;
+
     }
 
     public static boolean checkAllIntancesConstraints(Model model){

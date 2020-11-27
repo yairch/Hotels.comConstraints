@@ -40,6 +40,7 @@ public class ReservationSet implements  ITestable{
     }
 
     public static boolean checkAllIntancesConstraints(Model model){
-        return true;
+       return true;
+
     }
 }

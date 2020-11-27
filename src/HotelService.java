@@ -52,6 +52,15 @@ public class HotelService implements  ITestable{
     }
 
     public static boolean checkAllIntancesConstraints(Model model){
-        return true;
+        boolean flag = true;
+        for (Object obj : model.allObjects)
+        {
+            if(obj instanceof HotelService){
+                if(!((HotelService)obj).checkConstraints()){
+                    flag=false;
+                }
+            }
+        }
+        return flag;
     }
 }

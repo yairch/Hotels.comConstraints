@@ -1,5 +1,6 @@
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class Room implements  ITestable{
     private RoomCategory roomCategory;
@@ -39,10 +40,33 @@ public class Room implements  ITestable{
 
     @Override
     public boolean checkConstraints() {
+        //constraint 5
+        if (roomCategory.getType().equals("VIP")){
+            for (Booking bookings: bookings.values()){
+                List<HotelService> list = bookings.getServices();
+                for(int i=0; i<list.size();i++){
+                    if(!( list.get(i).getService() instanceof VipService)){
+                        return false;
+                    }
+
+                }
+            }
+        }
+
         return true;
     }
 
     public static boolean checkAllIntancesConstraints(Model model){
-        return true;
+        boolean flag = true;
+        for (Object obj : model.allObjects)
+        {
+            if(obj instanceof Room){
+                if(!((Room)obj).checkConstraints()){
+                    flag=false;
+                }
+            }
+        }
+        return flag;
+
     }
 }
