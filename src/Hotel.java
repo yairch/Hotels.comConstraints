@@ -58,10 +58,78 @@ public class Hotel implements  ITestable{
 
     @Override
     public boolean checkConstraints() {
+        //constraint 6
+        float sizeOfRoom = (rooms.values()).size();
+        sizeOfRoom = (float) (sizeOfRoom*0.1);
+        int countRoomVip=0;
+        for(Room room: rooms.values()){
+            if((room.getRoomCategory().getType()).equals("VIP")){
+                countRoomVip++;
+            }
+        }
+        if (countRoomVip>sizeOfRoom){
+            return false;
+        }
+
+        //constraint 7
+
+        if (city.equals("LAS VEGAS")){
+            for (Client client : allReservation.keySet()){
+                if (client.getAge()<21){
+                    return false;
+                }
+            }
+        }
+
+        //constraint 10
+        int count=0;
+        int sum = 0;
+        if ( rate == 5){
+            for(ReservationSet reservationSet: allReservation.values()){
+                for (Reservation reservation : reservationSet.getReservations()){
+                    sum+= reservation.getBookings().getReview().getRank();
+                    count++;
+                }
+            }
+
+            float total = (sum)/count;
+            if (total<=7.5){
+                return false;
+            }
+
+        }
+
+        // constraint 11
+        for(HotelService hotelService: services.values()){
+            int count1 =0;
+            for(HotelService hotelService1: services.values()) {
+                if ((hotelService.getService().serviceName).equals(hotelService1.getService().serviceName))
+                    count1++;
+            }
+            if (count1>1){
+                return false;
+            }
+        }
+
+        //constraint 12/14
+
+
+
+
         return true;
     }
 
     public static boolean checkAllIntancesConstraints(Model model){
-        return true;
+        boolean flag = true;
+        for (Object obj : model.allObjects)
+        {
+            if(obj instanceof Hotel){
+                if(!((Hotel)obj).checkConstraints()){
+                    flag=false;
+                }
+            }
+        }
+        return flag;
+
     }
 }

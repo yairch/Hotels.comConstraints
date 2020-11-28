@@ -53,11 +53,45 @@ public class Reservation implements  ITestable {
 
     @Override
     public boolean checkConstraints() {
+        //constraint8
+        if(roomCategory.getType().equals("SUITE")){
+            if(booking.getRoom().getRoomCategory().getType().equals("BASIC")){
+                return false;
+            }
+
+        }
+        if(roomCategory.getType().equals("VIP")){
+            if(booking.getRoom().getRoomCategory().getType().equals("SUITE") ||booking.getRoom().getRoomCategory().getType().equals("BASIC") ){
+                return false;
+            }
+
+        }
+
+
+        //constraint 9
+        for (HotelService hotelService: booking.getServices() ){
+            if (hotelService.getService() instanceof  VipService){
+                if (booking.getReview() == null){
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
     public static boolean checkAllIntancesConstraints(Model model) {
-        return true;
+        boolean flag = true;
+        for (Object obj : model.allObjects)
+        {
+            if(obj instanceof Reservation){
+                if(!((Reservation)obj).checkConstraints()){
+                    flag=false;
+                }
+            }
+        }
+        return flag;
+
     }
 
 
