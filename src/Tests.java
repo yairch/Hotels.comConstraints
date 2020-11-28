@@ -44,7 +44,8 @@ public class Tests {
         model.addObjectToModel(hotel2);
         model.create_link_group_hotel(hotel1, group1);
         model.create_link_group_hotel(hotel2, group1);
-        assertFalse(model.checkModelConstraints());
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
     }
 
     @Description("5 times bookings in Hotel -> VIP Room")
@@ -103,7 +104,8 @@ public class Tests {
         model.create_link_room_roomCategory(room4, basicRoom);
         model.create_link_room_roomCategory(room5, suiteRoom);
 
-        assertFalse(model.checkModelConstraints());
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
     }
 
     @Description("Resevation and Booking to the same Hotel")
