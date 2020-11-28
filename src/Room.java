@@ -41,7 +41,7 @@ public class Room implements  ITestable{
     @Override
     public boolean checkConstraints() {
         //constraint 5
-        if (roomCategory.getType().equals("VIP")){
+        if (roomCategory.getType().equals(RoomCategory.RoomType.VIP)){
             for (Booking bookings: bookings.values()){
                 List<HotelService> list = bookings.getServices();
                 for(int i=0; i<list.size();i++){

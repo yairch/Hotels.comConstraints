@@ -1,4 +1,4 @@
-import jdk.jfr.Description;
+import com.sun.org.glassfish.gmbal.Description;
 import org.junit.Test;
 
 import java.util.Date;
@@ -370,7 +370,7 @@ public class Tests {
         model.create_link_room_Booking(room1, booking5);
         model.create_link_room_roomCategory(room1, vipRoom);
         model.create_link_room_Booking(room2, booking4);
-        model.create_link_room_roomCategory(room1, suiteRoom);
+        model.create_link_room_roomCategory(room2, suiteRoom);
         model.create_link_hotel_room(room1, hotel1);
         model.create_link_hotel_room(room2, hotel1);
 

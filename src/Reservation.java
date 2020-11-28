@@ -54,14 +54,14 @@ public class Reservation implements  ITestable {
     @Override
     public boolean checkConstraints() {
         //constraint8
-        if(roomCategory.getType().equals("SUITE")){
-            if(booking.getRoom().getRoomCategory().getType().equals("BASIC")){
+        if(roomCategory.getType().equals(RoomCategory.RoomType.SUITE)){
+            if(booking.getRoom().getRoomCategory().getType().equals(RoomCategory.RoomType.BASIC)){
                 return false;
             }
 
         }
-        if(roomCategory.getType().equals("VIP")){
-            if(booking.getRoom().getRoomCategory().getType().equals("SUITE") ||booking.getRoom().getRoomCategory().getType().equals("BASIC") ){
+        if(roomCategory.getType().equals(RoomCategory.RoomType.VIP)){
+            if(booking.getRoom().getRoomCategory().getType().equals(RoomCategory.RoomType.SUITE) ||booking.getRoom().getRoomCategory().getType().equals(RoomCategory.RoomType.BASIC) ){
                 return false;
             }
 

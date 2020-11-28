@@ -67,10 +67,6 @@ public class Booking implements  ITestable{
             }
         }
 
-
-
-
-
         return true;
     }
 

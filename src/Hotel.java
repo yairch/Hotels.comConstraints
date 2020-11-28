@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Hotel implements  ITestable{
@@ -8,7 +11,8 @@ public class Hotel implements  ITestable{
     private String city;
     private Group group;
     private int rate;
-
+    private HashMap<Integer,Integer> sumOfYears;
+    private ArrayList<Integer> years;
 
 
     public Hotel(String city, String name,int rate){
@@ -63,7 +67,7 @@ public class Hotel implements  ITestable{
         sizeOfRoom = (float) (sizeOfRoom*0.1);
         int countRoomVip=0;
         for(Room room: rooms.values()){
-            if((room.getRoomCategory().getType()).equals("VIP")){
+            if((room.getRoomCategory().getType()).equals(RoomCategory.RoomType.VIP)){
                 countRoomVip++;
             }
         }
@@ -82,6 +86,7 @@ public class Hotel implements  ITestable{
         }
 
         //constraint 10
+       if(allReservation.size()>0){
         int count=0;
         int sum = 0;
         if ( rate == 5){
@@ -97,7 +102,10 @@ public class Hotel implements  ITestable{
                 return false;
             }
 
-        }
+        }}
+       else {
+           return false;
+       }
 
         // constraint 11
         for(HotelService hotelService: services.values()){
@@ -112,7 +120,31 @@ public class Hotel implements  ITestable{
         }
 
         //constraint 12/14
-
+        for (Room room:rooms.values()){
+            for(Date date: room.getBookings().keySet()) {
+                String year1 = date.toString().split(" ")[5];
+                Integer year = Integer.parseInt(year1);
+                for(HotelService hotelService:room.getBookings().get(date).getServices()){
+                    if (!sumOfYears.containsKey(year)){
+                        sumOfYears.put(year,hotelService.getPrice());
+                        years.add(year);
+                    }
+                    else {
+                        int total = sumOfYears.get(year);
+                        total+=hotelService.getPrice();
+                        sumOfYears.put(year,total);
+                    }
+                }
+                Collections.sort(years);
+                for (int i = 0; i<years.size()-1;i++){
+                    int year12= sumOfYears.get(years.get(i));
+                    int year2= sumOfYears.get(years.get(i+1));
+                    if(year12>year2){
+                        return false;
+                    }
+                }
+            }
+        }
 
 
 
