@@ -10,9 +10,13 @@ public class Tests {
     Group group1 = new Group(1);
 
     Hotel hotel1 = new Hotel("Haifa", "Dan Panorama", 4);
-    Hotel hotel2 = new Hotel("Haifa", "Dan Music", 4);
+    Hotel hotel2 = new Hotel("Haifa", "Dan Music", 3);
+    Hotel hotel3 = new Hotel("Eilat", "Dan Panorama", 4);
+    Hotel hotel4 = new Hotel("LAS VEGAS", "El Casino", 5);
 
     Client client1 = new Client(1234, 30, "Yossi", "Tel Aviv");
+    Client client2 = new Client(2222, 18, "Michael", "New York");
+
     ReservationSet reservationSet = new ReservationSet();
     Reservation r1 = new Reservation(new Date(), new Date(), 12340);
     Reservation r2 = new Reservation(new Date(), new Date(), 146534);
@@ -36,12 +40,21 @@ public class Tests {
     Booking booking4 = new Booking(Model.getDateFromString("10-11-2019"), room4);
     Booking booking5 = new Booking(Model.getDateFromString("11-12-2018"), room5);
 
+    Service casino = new VipService("Casino");
+    Service pool2 = new CommunityService("Pool");
+    Service pool = new RegularService("Pool");
+    HotelService hotelService1 = new HotelService(100, 5);
+    HotelService hotelService2 = new HotelService(50, 3);
+
+    Review review1 = new Review(6, "Good", Model.getDateFromString("10-10-2020"));
+
     @Description("Two Hotels in the same Group in the same town")
     @Test
     public void constraint1(){
         Model model = new Model();
         model.addObjectToModel(hotel1);
         model.addObjectToModel(hotel2);
+        model.addObjectToModel(group1);
         model.create_link_group_hotel(hotel1, group1);
         model.create_link_group_hotel(hotel2, group1);
         boolean result = model.checkModelConstraints();
@@ -86,6 +99,12 @@ public class Tests {
         model.create_link_reservation_booking(booking4, r4);
         model.create_link_reservation_booking(booking5, r5);
 
+        model.create_link_reservation_roomCategory(r1, basicRoom);
+        model.create_link_reservation_roomCategory(r2, basicRoom);
+        model.create_link_reservation_roomCategory(r3, suiteRoom);
+        model.create_link_reservation_roomCategory(r4, basicRoom);
+        model.create_link_reservation_roomCategory(r5, suiteRoom);
+
         model.create_link_room_Booking(room1, booking1);
         model.create_link_room_Booking(room2, booking2);
         model.create_link_room_Booking(room3, booking3);
@@ -108,47 +127,292 @@ public class Tests {
         assertFalse(result);
     }
 
-    @Description("Resevation and Booking to the same Hotel")
+    @Description("Reservation and Booking to the same Hotel")
     @Test
-    public void constraint3(){}
+    public void constraint3(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(hotel2);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(basicRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(booking1);
+
+        model.create_link_client_hotel_reservationSet(client1, hotel1, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservation_roomCategory(r1, basicRoom);
+
+        model.create_link_reservation_booking(booking1, r1);
+        model.create_link_room_Booking(room1, booking1);
+        model.create_link_hotel_room(room1, hotel2);
+        model.create_link_room_roomCategory(room1, basicRoom);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("same Services for all Hotels in the same Group")
     @Test
-    public void constraint4(){}
+    public void constraint4(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(hotel3);
+        model.addObjectToModel(group1);
+        model.addObjectToModel(casino);
+        model.addObjectToModel(hotelService1);
+
+        model.create_link_group_hotel(hotel1, group1);
+        model.create_link_group_hotel(hotel3, group1);
+        model.create_link_hotel_service_hotelService(hotel1, casino, hotelService1);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("all Services for a VIP Room are VIP Services")
     @Test
-    public void constraint5(){}
+    public void constraint5(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(vipRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(booking1);
+        model.addObjectToModel(pool);
+        model.addObjectToModel(hotelService2);
+
+        model.create_link_client_hotel_reservationSet(client1, hotel1, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservation_roomCategory(r1, vipRoom);
+
+        model.create_link_reservation_booking(booking1, r1);
+        model.create_link_room_Booking(room1, booking1);
+        model.create_link_room_roomCategory(room1, vipRoom);
+        model.create_link_hotel_room(room1, hotel1);
+
+        model.create_link_hotel_service_hotelService(hotel1, pool, hotelService2);
+        model.create_link_hotelService_booking(hotelService2, booking1);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("VIP Rooms not up then 10% of all Rooms in a Hotel")
     @Test
-    public void constraint6(){}
+    public void constraint6(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(vipRoom);
+
+        model.create_link_room_roomCategory(room1, vipRoom);
+        model.create_link_hotel_room(room1, hotel1);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+
+    }
 
     @Description("The age of a guest in a Las Vegas Hotel should be bigger than 21")
     @Test
-    public void constraint7(){}
+    public void constraint7(){
+        Model model = new Model();
+        model.addObjectToModel(hotel4);
+        model.addObjectToModel(client2);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r2);
+
+        model.create_link_client_hotel_reservationSet(client2, hotel4, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r2);
+
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("Room Type should be as in the Reservation or higher")
     @Test
-    public void constraint8(){}
+    public void constraint8(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(basicRoom);
+        model.addObjectToModel(vipRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(booking1);
+
+        model.create_link_client_hotel_reservationSet(client1, hotel1, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservation_roomCategory(r1, vipRoom);
+
+        model.create_link_reservation_booking(booking1, r1);
+        model.create_link_room_Booking(room1, booking1);
+        model.create_link_room_roomCategory(room1, basicRoom);
+
+        model.create_link_hotel_room(room1, hotel1);
+
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("VIP costumer should add Review")
     @Test
-    public void constraint9(){}
+    public void constraint9(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(vipRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(booking1);
+        model.addObjectToModel(casino);
+        model.addObjectToModel(hotelService1);
+
+        model.create_link_client_hotel_reservationSet(client1, hotel1, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservation_roomCategory(r1, vipRoom);
+
+        model.create_link_reservation_booking(booking1, r1);
+        model.create_link_room_Booking(room1, booking1);
+        model.create_link_room_roomCategory(room1, vipRoom);
+        model.create_link_hotel_room(room1, hotel1);
+
+        model.create_link_hotel_service_hotelService(hotel1, casino, hotelService1);
+        model.create_link_hotelService_booking(hotelService1, booking1);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("The average rate of 5 stars Hotel is above 7.5")
     @Test
-    public void constraint10(){}
+    public void constraint10(){
+        Model model = new Model();
+        model.addObjectToModel(hotel4);
+
+        // THIS IS COMMENTES BECAUSE IT SHOULD NOT FALL BY ZERO
+//        model.addObjectToModel(client1);
+//        model.addObjectToModel(reservationSet);
+//        model.addObjectToModel(r1);
+//        model.addObjectToModel(basicRoom);
+//        model.addObjectToModel(room1);
+//        model.addObjectToModel(booking1);
+//        model.addObjectToModel(review1);
+//
+//        model.create_link_client_hotel_reservationSet(client1, hotel4, reservationSet);
+//        model.create_link_reservationSet_reservation(reservationSet,r1);
+//        model.create_link_reservation_roomCategory(r1, basicRoom);
+//
+//        model.create_link_reservation_booking(booking1, r1);
+//        model.create_link_room_Booking(room1, booking1);
+//        model.create_link_room_roomCategory(room1, basicRoom);
+//        model.create_link_hotel_room(room1, hotel4);
+//        model.create_link_booking_review(booking1, review1);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("Two Services in the same Hotel should be in different names")
     @Test
-    public void constraint11(){}
+    public void constraint11(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(pool);
+        model.addObjectToModel(pool2);
+        model.addObjectToModel(hotelService1);
+        model.addObjectToModel(hotelService2);
+
+        model.create_link_hotel_service_hotelService(hotel1, pool, hotelService1);
+        model.create_link_hotel_service_hotelService(hotel1, pool2, hotelService2);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("The income of a Hotel will be higher in every year than the last year")
     @Test
-    public void constraint12(){}
+    public void constraint12(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(r2);
+        model.addObjectToModel(vipRoom);
+        model.addObjectToModel(suiteRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(room2);
+        model.addObjectToModel(booking4);
+        model.addObjectToModel(booking5);
+        model.addObjectToModel(casino);
+        model.addObjectToModel(pool);
+        model.addObjectToModel(hotelService1);
+        model.addObjectToModel(hotelService2);
+
+        model.create_link_client_hotel_reservationSet(client1, hotel1, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservationSet_reservation(reservationSet,r2);
+        model.create_link_reservation_roomCategory(r1, vipRoom);
+        model.create_link_reservation_roomCategory(r2, suiteRoom);
+
+        model.create_link_reservation_booking(booking5, r1);
+        model.create_link_reservation_booking(booking4, r2);
+
+        model.create_link_room_Booking(room1, booking5);
+        model.create_link_room_roomCategory(room1, vipRoom);
+        model.create_link_room_Booking(room2, booking4);
+        model.create_link_room_roomCategory(room1, suiteRoom);
+        model.create_link_hotel_room(room1, hotel1);
+        model.create_link_hotel_room(room2, hotel1);
+
+        model.create_link_hotel_service_hotelService(hotel1, casino, hotelService1);
+        model.create_link_hotel_service_hotelService(hotel1, pool, hotelService1);
+
+        model.create_link_hotelService_booking(hotelService1, booking5);
+        model.create_link_hotelService_booking(hotelService1, booking4);
+
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 
     @Description("All Services given in Booking should be of the same Hotel")
     @Test
-    public void constraint13(){}
+    public void constraint13(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(hotel2);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(vipRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(booking1);
+        model.addObjectToModel(casino);
+        model.addObjectToModel(hotelService1);
+
+        model.create_link_client_hotel_reservationSet(client1, hotel1, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservation_roomCategory(r1, vipRoom);
+
+        model.create_link_reservation_booking(booking1, r1);
+        model.create_link_room_Booking(room1, booking1);
+        model.create_link_room_roomCategory(room1, vipRoom);
+        model.create_link_hotel_room(room1, hotel1);
+
+        model.create_link_hotel_service_hotelService(hotel2, casino, hotelService1);
+        model.create_link_hotelService_booking(hotelService1, booking1);
+
+        boolean result = model.checkModelConstraints();
+        assertFalse(result);
+    }
 }
