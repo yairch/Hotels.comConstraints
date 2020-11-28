@@ -1,9 +1,10 @@
-import com.sun.org.glassfish.gmbal.Description;
+import jdk.jfr.Description;
 import org.junit.Test;
 
 import java.util.Date;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class Tests {
 
@@ -33,6 +34,11 @@ public class Tests {
     Room room3 = new Room(3);
     Room room4 = new Room(4);
     Room room5 = new Room(5);
+    Room room6 = new Room(6);
+    Room room7 = new Room(7);
+    Room room8 = new Room(8);
+    Room room9 = new Room(9);
+    Room room10 = new Room(10);
 
     Booking booking1 = new Booking(Model.getDateFromString("10-11-2020"), room1);
     Booking booking2 = new Booking(Model.getDateFromString("11-10-2020"), room2);
@@ -43,10 +49,118 @@ public class Tests {
     Service casino = new VipService("Casino");
     Service pool2 = new CommunityService("Pool");
     Service pool = new RegularService("Pool");
-    HotelService hotelService1 = new HotelService(100, 5);
+    HotelService hotelService1 = new HotelService(100, 4);
     HotelService hotelService2 = new HotelService(50, 3);
+    HotelService hotelService3 = new HotelService(200, 5);
+    HotelService hotelService4 = new HotelService(30, 2);
 
     Review review1 = new Review(6, "Good", Model.getDateFromString("10-10-2020"));
+    Review review2 = new Review(9, "Very Good", Model.getDateFromString("10-11-2020"));
+
+
+    @Description("Good Model should return true")
+    @Test
+    public void allConstraints() {
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(hotel3);
+        model.addObjectToModel(hotel4);
+        model.addObjectToModel(group1);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(r2);
+        model.addObjectToModel(r3);
+        model.addObjectToModel(r4);
+        model.addObjectToModel(r5);
+        model.addObjectToModel(suiteRoom);
+        model.addObjectToModel(basicRoom);
+        model.addObjectToModel(vipRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(room2);
+        model.addObjectToModel(room3);
+        model.addObjectToModel(room4);
+        model.addObjectToModel(room5);
+        model.addObjectToModel(room6);
+        model.addObjectToModel(room7);
+        model.addObjectToModel(room8);
+        model.addObjectToModel(room9);
+        model.addObjectToModel(room10);
+        model.addObjectToModel(booking1);
+        model.addObjectToModel(booking2);
+        model.addObjectToModel(booking3);
+        model.addObjectToModel(booking4);
+        model.addObjectToModel(booking5);
+        model.addObjectToModel(casino);
+        model.addObjectToModel(pool);
+        model.addObjectToModel(hotelService1);
+        model.addObjectToModel(hotelService2);
+        model.addObjectToModel(review2);
+
+
+        model.create_link_group_hotel(hotel1, group1);
+        model.create_link_group_hotel(hotel4, group1);
+        model.create_link_client_hotel_reservationSet(client1, hotel4, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservationSet_reservation(reservationSet,r2);
+        model.create_link_reservationSet_reservation(reservationSet,r3);
+        model.create_link_reservationSet_reservation(reservationSet,r4);
+        model.create_link_reservationSet_reservation(reservationSet,r5);
+
+        model.create_link_reservation_roomCategory(r1, vipRoom);
+        model.create_link_reservation_roomCategory(r2, suiteRoom);
+        model.create_link_reservation_roomCategory(r3, suiteRoom);
+        model.create_link_reservation_roomCategory(r4, suiteRoom);
+        model.create_link_reservation_roomCategory(r5, suiteRoom);
+
+        model.create_link_reservation_booking(booking1, r1);
+        model.create_link_reservation_booking(booking2, r2);
+        model.create_link_reservation_booking(booking3, r3);
+        model.create_link_reservation_booking(booking4, r4);
+        model.create_link_reservation_booking(booking5, r5);
+
+        model.create_link_room_Booking(room1, booking1);
+        model.create_link_room_Booking(room2, booking2);
+        model.create_link_room_Booking(room3, booking3);
+        model.create_link_room_Booking(room4, booking4);
+        model.create_link_room_Booking(room1, booking5);
+
+        model.create_link_hotel_room(room1, hotel4);
+        model.create_link_hotel_room(room2, hotel4);
+        model.create_link_hotel_room(room3, hotel4);
+        model.create_link_hotel_room(room4, hotel4);
+        model.create_link_hotel_room(room5, hotel4);
+        model.create_link_hotel_room(room6, hotel4);
+        model.create_link_hotel_room(room7, hotel4);
+        model.create_link_hotel_room(room8, hotel4);
+        model.create_link_hotel_room(room9, hotel4);
+        model.create_link_hotel_room(room10, hotel4);
+
+        model.create_link_room_roomCategory(room1, vipRoom);
+        model.create_link_room_roomCategory(room2, suiteRoom);
+        model.create_link_room_roomCategory(room3, suiteRoom);
+        model.create_link_room_roomCategory(room4, suiteRoom);
+        model.create_link_room_roomCategory(room5, suiteRoom);
+        model.create_link_room_roomCategory(room6, basicRoom);
+        model.create_link_room_roomCategory(room7, basicRoom);
+        model.create_link_room_roomCategory(room8, basicRoom);
+        model.create_link_room_roomCategory(room9, basicRoom);
+        model.create_link_room_roomCategory(room10, basicRoom);
+
+        model.create_link_hotel_service_hotelService(hotel1, casino, hotelService1);
+        model.create_link_hotel_service_hotelService(hotel4, casino, hotelService3);
+
+        model.create_link_hotel_service_hotelService(hotel1, pool, hotelService2);
+        model.create_link_hotel_service_hotelService(hotel4, pool, hotelService4);
+
+        model.create_link_hotelService_booking(hotelService3, booking1);
+        model.create_link_hotelService_booking(hotelService4, booking4);
+        model.create_link_booking_review(booking1, review2);
+
+
+        boolean result = model.checkModelConstraints();
+        assertTrue(result);
+    }
 
     @Description("Two Hotels in the same Group in the same town")
     @Test
@@ -298,24 +412,23 @@ public class Tests {
         Model model = new Model();
         model.addObjectToModel(hotel4);
 
-        // THIS IS COMMENTES BECAUSE IT SHOULD NOT FALL BY ZERO
-//        model.addObjectToModel(client1);
-//        model.addObjectToModel(reservationSet);
-//        model.addObjectToModel(r1);
-//        model.addObjectToModel(basicRoom);
-//        model.addObjectToModel(room1);
-//        model.addObjectToModel(booking1);
-//        model.addObjectToModel(review1);
-//
-//        model.create_link_client_hotel_reservationSet(client1, hotel4, reservationSet);
-//        model.create_link_reservationSet_reservation(reservationSet,r1);
-//        model.create_link_reservation_roomCategory(r1, basicRoom);
-//
-//        model.create_link_reservation_booking(booking1, r1);
-//        model.create_link_room_Booking(room1, booking1);
-//        model.create_link_room_roomCategory(room1, basicRoom);
-//        model.create_link_hotel_room(room1, hotel4);
-//        model.create_link_booking_review(booking1, review1);
+        model.addObjectToModel(client1);
+        model.addObjectToModel(reservationSet);
+        model.addObjectToModel(r1);
+        model.addObjectToModel(basicRoom);
+        model.addObjectToModel(room1);
+        model.addObjectToModel(booking1);
+        model.addObjectToModel(review1);
+
+        model.create_link_client_hotel_reservationSet(client1, hotel4, reservationSet);
+        model.create_link_reservationSet_reservation(reservationSet,r1);
+        model.create_link_reservation_roomCategory(r1, basicRoom);
+
+        model.create_link_reservation_booking(booking1, r1);
+        model.create_link_room_Booking(room1, booking1);
+        model.create_link_room_roomCategory(room1, basicRoom);
+        model.create_link_hotel_room(room1, hotel4);
+        model.create_link_booking_review(booking1, review1);
 
         boolean result = model.checkModelConstraints();
         assertFalse(result);
