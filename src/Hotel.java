@@ -93,20 +93,21 @@ public class Hotel implements  ITestable{
            if ( rate == 5){
                for(ReservationSet reservationSet: allReservation.values()){
                    for (Reservation reservation : reservationSet.getReservations()){
-                       sum+= reservation.getBookings().getReview().getRank();
-                       count++;
+                       if(reservation.getBookings().getReview() != null) {
+                           sum += reservation.getBookings().getReview().getRank();
+                           count++;
+                       }
                    }
                }
-
-               float total = (sum)/count;
+               if(count== 0){
+                   return false;
+               }
+               float total = sum/count;
                if (total<=7.5){
                    return false;
                }
 
            }
-       }
-       else {
-           return false;
        }
 
         // constraint 11

@@ -46,8 +46,8 @@ public class Group implements  ITestable{
 
         for(Hotel hotel : hotels){
             for (Hotel hotel1 : hotels){
-                List<HotelService> list = new ArrayList<HotelService>(hotel.getServices().values());
-                List<HotelService> list1 = new ArrayList<HotelService>(hotel1.getServices().values());
+                List<Service> list = new ArrayList<Service>(hotel.getServices().keySet());
+                List<Service> list1 = new ArrayList<Service>(hotel1.getServices().keySet());
                 boolean isEqual = list.equals(list1);
                 if (!isEqual){
                     return false;
