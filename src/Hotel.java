@@ -111,10 +111,10 @@ public class Hotel implements  ITestable{
        }
 
         // constraint 11
-        for(HotelService hotelService: services.values()){
+        for(Service hotelService: services.keySet()){
             int count1 =0;
-            for(HotelService hotelService1: services.values()) {
-                if ((hotelService.getService().serviceName).equals(hotelService1.getService().serviceName))
+            for(Service hotelService1: services.keySet()) {
+                if ((hotelService.serviceName).equals(hotelService1.serviceName))
                     count1++;
             }
             if (count1>1){
