@@ -22,7 +22,8 @@ public class Hotel implements  ITestable{
         rooms = new HashMap<Integer,Room>();
         allReservation = new HashMap<Client, ReservationSet>();
         services = new HashMap<Service, HotelService>();
-
+        sumOfYears = new HashMap<>();
+        years = new ArrayList<>();
     }
 
     public void addReservationSet(Client client,ReservationSet reservationSet){
@@ -87,22 +88,23 @@ public class Hotel implements  ITestable{
 
         //constraint 10
        if(allReservation.size()>0){
-        int count=0;
-        int sum = 0;
-        if ( rate == 5){
-            for(ReservationSet reservationSet: allReservation.values()){
-                for (Reservation reservation : reservationSet.getReservations()){
-                    sum+= reservation.getBookings().getReview().getRank();
-                    count++;
-                }
-            }
+           int count=0;
+           int sum = 0;
+           if ( rate == 5){
+               for(ReservationSet reservationSet: allReservation.values()){
+                   for (Reservation reservation : reservationSet.getReservations()){
+                       sum+= reservation.getBookings().getReview().getRank();
+                       count++;
+                   }
+               }
 
-            float total = (sum)/count;
-            if (total<=7.5){
-                return false;
-            }
+               float total = (sum)/count;
+               if (total<=7.5){
+                   return false;
+               }
 
-        }}
+           }
+       }
        else {
            return false;
        }
