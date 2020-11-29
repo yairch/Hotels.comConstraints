@@ -121,10 +121,10 @@ public class Client implements  ITestable {
 
     public static boolean checkAllIntancesConstraints(Model model){
 
-//        for (Client client : model.ClientAllInstances()){
-//            if (!client.checkConstraints())
-//                return false;
-//        }
+        for (Client client : model.ClientAllInstances()){
+            if (!client.checkConstraints())
+                return false;
+        }
         return true;
     }
 }

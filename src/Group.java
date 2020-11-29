@@ -46,8 +46,14 @@ public class Group implements  ITestable{
 
         for(Hotel hotel : hotels){
             for (Hotel hotel1 : hotels){
-                List<Service> list = new ArrayList<Service>(hotel.getServices().keySet());
-                List<Service> list1 = new ArrayList<Service>(hotel1.getServices().keySet());
+                List<String> list = new ArrayList<String>();
+                List<String> list1 = new ArrayList<String>();
+                for (Service service : hotel.getServices().keySet()){
+                    list.add(service.getServiceName());
+                }
+                for (Service service:hotel1.getServices().keySet()){
+                    list1.add(service.getServiceName());
+                }
                 boolean isEqual = list.equals(list1);
                 if (!isEqual){
                     return false;
@@ -60,14 +66,14 @@ public class Group implements  ITestable{
     }
     public static boolean checkAllIntancesConstraints(Model model){
         boolean flag = true;
-//        for (Object obj : model.allObjects)
-//        {
-//            if(obj instanceof Group){
-//                if(!((Group)obj).checkConstraints()){
-//                    flag=false;
-//                }
-//            }
-//        }
+        for (Object obj : model.allObjects)
+        {
+            if(obj instanceof Group){
+                if(!((Group)obj).checkConstraints()){
+                    flag=false;
+                }
+            }
+        }
         return flag;
 
     }
