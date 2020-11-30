@@ -55,67 +55,24 @@ public class Client implements  ITestable {
                 largeReservationSets.add(reservationSet);
         }
 
+        boolean bookedVipRoom = true;
+        if (largeReservationSets.size() > 0) {
+            for (ReservationSet reservationSet : largeReservationSets) {
+                bookedVipRoom = false;
 
-        boolean bookedVipRoom = false;
-        for (ReservationSet reservationSet : largeReservationSets){
+                for (Reservation reservation : reservationSet.getReservations()) {
 
-            bookedVipRoom = false;
-            for (Reservation reservation : reservationSet.getReservations()){
-
-                if (reservation.getBookings().getRoom().getRoomCategory().getType() == RoomCategory.RoomType.VIP){
-                    bookedVipRoom = true;
-                    break;
-                }
-            }
-
-            if (!bookedVipRoom)
-                break;
-        }
-
-
-        /*// A client who ordered a VIP service a obliged to add a review on the hotel
-        boolean addedVipReview = true;
-        for (ReservationSet reservationSet : this.getReservationsHistory().values()){
-            for (Reservation reservation : reservationSet.getReservations()){
-
-                Booking booking = reservation.getBookings();
-                for (HotelService hotelService : booking.getServices()){
-
-                    if (hotelService.getService() instanceof  VipService)
-                        if (booking.getReview() == null){
-                            addedVipReview = false;
-                            break;
-                        }
-                }
-
-                if (!addedVipReview)
-                    break;
-            }
-            if (!addedVipReview)
-                break;
-        }
-*/
-        //return bookedVipRoom && addedVipReview;
-        return bookedVipRoom ;
-
-       /* //constraint 2
-        int count =0;
-        for(ReservationSet reservationSet:reservationsHistory.values()){
-            count=0;
-            if(reservationSet.getReservations().size()>=5){
-                for(Reservation reservation : reservationSet.getReservations()){
-                    if((reservation.getBookings().getRoom().getRoomCategory().getType()).equals(RoomCategory.RoomType.VIP)){
-                        count++;
+                    if (reservation.getBookings().getRoom().getRoomCategory().getType() == RoomCategory.RoomType.VIP) {
+                       bookedVipRoom =true;
+                       break;
                     }
                 }
-                if (count<1){
-                    return false;
-                }
+                if (!bookedVipRoom)
+                    break;
             }
-
         }
 
-        return true;*/
+        return bookedVipRoom ;
 
     }
 

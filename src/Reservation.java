@@ -73,14 +73,15 @@ public class Reservation implements  ITestable {
 
 
         //constraint 9
-        for (HotelService hotelService: booking.getServices() ){
-            if (hotelService.getService() instanceof VipService){
-                if (booking.getReview() == null){
-                    return false;
+        if(booking.getServices() != null) {
+            for (HotelService hotelService : booking.getServices()) {
+                if (hotelService.getService() instanceof VipService) {
+                    if (booking.getReview() == null) {
+                        return false;
+                    }
                 }
             }
         }
-
         return true;
     }
 
