@@ -41,14 +41,16 @@ public class Room implements  ITestable{
     @Override
     public boolean checkConstraints() {
         //constraint 5
-        if (roomCategory.getType().equals(RoomCategory.RoomType.VIP)){
-            for (Booking bookings: bookings.values()){
-                List<HotelService> list = bookings.getServices();
-                for(int i=0; i<list.size();i++){
-                    if(!( list.get(i).getService() instanceof VipService)){
-                        return false;
-                    }
+        if(roomCategory != null){
+            if (roomCategory.getType().equals(RoomCategory.RoomType.VIP)){
+                for (Booking bookings: bookings.values()){
+                    List<HotelService> list = bookings.getServices();
+                    for(int i=0; i<list.size();i++){
+                        if(!( list.get(i).getService() instanceof VipService)){
+                            return false;
+                        }
 
+                    }
                 }
             }
         }

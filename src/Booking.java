@@ -56,8 +56,10 @@ public class Booking implements  ITestable{
     @Override
     public boolean checkConstraints() {
         //constraint 3
-        if(!(room.getHotel().getName()).equals(reservation.getReservationSet().getHotel().getName())){
-            return false;
+        if(room.getHotel() != null && reservation.getReservationSet().getHotel() != null){
+            if(!(room.getHotel().getName()).equals(reservation.getReservationSet().getHotel().getName())){
+                return false;
+            }
         }
 
         //constraint 13

@@ -78,7 +78,7 @@ public class Hotel implements  ITestable{
 
         //constraint 7
 
-        if (city.equals("LAS VEGAS")){
+        if (city.equals("LAS VEGAS") || city.equals("Las Vegas") || city.equals("las vegas")){
             for (Client client : allReservation.keySet()){
                 if (client.getAge()<21){
                     return false;
