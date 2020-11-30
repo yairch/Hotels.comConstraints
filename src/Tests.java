@@ -1,5 +1,5 @@
-//import jdk.jfr.Description;
-import com.sun.org.glassfish.gmbal.Description;
+import jdk.jfr.Description;
+//import com.sun.org.glassfish.gmbal.Description;
 import org.junit.Test;
 
 import java.util.Date;
@@ -58,6 +58,19 @@ public class Tests {
     Review review1 = new Review(6, "Good", Model.getDateFromString("10-10-2020"));
     Review review2 = new Review(9, "Very Good", Model.getDateFromString("10-11-2020"));
 
+    @Description("Two hotels with zero services")
+    @Test
+    public void zeroServices(){
+        Model model = new Model();
+        model.addObjectToModel(hotel1);
+        model.addObjectToModel(hotel3);
+        model.addObjectToModel(group1);
+        model.create_link_group_hotel(hotel1, group1);
+        model.create_link_group_hotel(hotel3, group1);
+
+        boolean result = model.checkModelConstraints();
+        assertTrue(result);
+    }
 
     @Description("Good Model should return true")
     @Test
@@ -461,7 +474,7 @@ public class Tests {
         model.addObjectToModel(reservationSet);
         model.addObjectToModel(r1);
         model.addObjectToModel(r2);
-        model.addObjectToModel(vipRoom);
+        model.addObjectToModel(basicRoom);
         model.addObjectToModel(suiteRoom);
         model.addObjectToModel(room1);
         model.addObjectToModel(room2);
@@ -475,18 +488,18 @@ public class Tests {
         model.create_link_client_hotel_reservationSet(client1, hotel1, reservationSet);
         model.create_link_reservationSet_reservation(reservationSet,r1);
         model.create_link_reservationSet_reservation(reservationSet,r2);
-        model.create_link_reservation_roomCategory(r1, vipRoom);
+        model.create_link_reservation_roomCategory(r1, basicRoom);
         model.create_link_reservation_roomCategory(r2, suiteRoom);
 
         model.create_link_reservation_booking(booking5, r1);
         model.create_link_reservation_booking(booking4, r2);
 
-        model.create_link_room_Booking(room1, booking5);
-        model.create_link_room_roomCategory(room1, vipRoom);
-        model.create_link_room_Booking(room2, booking4);
-        model.create_link_room_roomCategory(room2, suiteRoom);
-        model.create_link_hotel_room(room1, hotel1);
-        model.create_link_hotel_room(room2, hotel1);
+        model.create_link_room_Booking(room5, booking5);
+        model.create_link_room_roomCategory(room5, basicRoom);
+        model.create_link_room_Booking(room4, booking4);
+        model.create_link_room_roomCategory(room4, suiteRoom);
+        model.create_link_hotel_room(room4, hotel1);
+        model.create_link_hotel_room(room5, hotel1);
 
         model.create_link_hotel_service_hotelService(hotel1, casino, hotelService1);
         model.create_link_hotel_service_hotelService(hotel1, pool, hotelService1);

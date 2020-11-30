@@ -66,6 +66,7 @@ public class Booking implements  ITestable{
 
 
         //constraint 13
+
         for (HotelService hotelService: services){
             if (!(hotelService.getHotel().getName().equals(reservation.getReservationSet().getHotel().getName()))){
                 return false;

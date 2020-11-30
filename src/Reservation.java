@@ -54,16 +54,14 @@ public class Reservation implements  ITestable {
     @Override
     public boolean checkConstraints() {
         //constraint8
-        if (roomCategory != null){
+        if (roomCategory != null && booking!=null ){
             if(roomCategory.getType().equals(RoomCategory.RoomType.SUITE)){
                 if(booking.getRoom().getRoomCategory().getType().equals(RoomCategory.RoomType.BASIC)){
                     return false;
                 }
 
             }
-        }
-        if (roomCategory != null){
-             if(roomCategory.getType().equals(RoomCategory.RoomType.VIP)){
+            if(roomCategory.getType().equals(RoomCategory.RoomType.VIP)){
                 if(booking.getRoom().getRoomCategory().getType().equals(RoomCategory.RoomType.SUITE) ||booking.getRoom().getRoomCategory().getType().equals(RoomCategory.RoomType.BASIC) ){
                     return false;
                 }
@@ -72,8 +70,11 @@ public class Reservation implements  ITestable {
         }
 
 
+
+
         //constraint 9
-        if(booking.getServices() != null) {
+
+        if(booking != null && booking.getServices() != null) {
             for (HotelService hotelService : booking.getServices()) {
                 if (hotelService.getService() instanceof VipService) {
                     if (booking.getReview() == null) {

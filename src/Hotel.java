@@ -64,16 +64,18 @@ public class Hotel implements  ITestable{
     @Override
     public boolean checkConstraints() {
         //constraint 6
-        float sizeOfRoom = (rooms.values()).size();
-        sizeOfRoom = (float) (sizeOfRoom*0.1);
-        int countRoomVip=0;
-        for(Room room: rooms.values()){
-            if((room.getRoomCategory().getType()).equals(RoomCategory.RoomType.VIP)){
-                countRoomVip++;
+        if(rooms.size()>0) {
+            float sizeOfRoom = (rooms.values()).size();
+            sizeOfRoom = (float) (sizeOfRoom * 0.1);
+            int countRoomVip = 0;
+            for (Room room : rooms.values()) {
+                if ((room.getRoomCategory().getType()).equals(RoomCategory.RoomType.VIP)) {
+                    countRoomVip++;
+                }
             }
-        }
-        if (countRoomVip>sizeOfRoom){
-            return false;
+            if (countRoomVip > sizeOfRoom) {
+                return false;
+            }
         }
 
         //constraint 7
@@ -111,10 +113,10 @@ public class Hotel implements  ITestable{
        }
 
         // constraint 11
-        for(Service hotelService: services.keySet()){
+        for(Service service: services.keySet()){
             int count1 =0;
-            for(Service hotelService1: services.keySet()) {
-                if ((hotelService.serviceName).equals(hotelService1.serviceName))
+            for(Service service1: services.keySet()) {
+                if ((service.serviceName).equals(service1.serviceName))
                     count1++;
             }
             if (count1>1){
@@ -124,31 +126,30 @@ public class Hotel implements  ITestable{
 
         //constraint 12/14
         for (Room room:rooms.values()){
-            for(Date date: room.getBookings().keySet()) {
+            for (Date date :room.getBookings().keySet()){
                 String year1 = date.toString().split(" ")[5];
                 Integer year = Integer.parseInt(year1);
-                for(HotelService hotelService:room.getBookings().get(date).getServices()){
-                    if (!sumOfYears.containsKey(year)){
-                        sumOfYears.put(year,hotelService.getPrice());
-                        years.add(year);
-                    }
-                    else {
-                        int total = sumOfYears.get(year);
-                        total+=hotelService.getPrice();
-                        sumOfYears.put(year,total);
-                    }
+                if (!sumOfYears.containsKey(year)){
+                    sumOfYears.put(year,0);
                 }
-                Collections.sort(years);
-                for (int i = 0; i<years.size()-1;i++){
-                    int year12= sumOfYears.get(years.get(i));
-                    int year2= sumOfYears.get(years.get(i+1));
-                    if(year12>year2){
-                        return false;
-                    }
+                ArrayList<HotelService> hotelServices =room.getBookings().get(date).getServices();
+                for (HotelService hotelService: hotelServices) {
+                    int sum = sumOfYears.get(year) + hotelService.getPrice();
+                    sumOfYears.put(year,sum);
                 }
+
             }
         }
+        ArrayList<Integer> sortedKeys = new ArrayList<>(sumOfYears.keySet());
+        Collections.sort(sortedKeys);
+        for (int i = 0 ; i < sortedKeys.size()-1;i++){
+            int totalOfYear = sumOfYears.get(sortedKeys.get(i));
+            int nextYear = sumOfYears.get(sortedKeys.get(i+1));
+            if(nextYear<=totalOfYear){
+                return false;
+            }
 
+        }
 
 
         return true;

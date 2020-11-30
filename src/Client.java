@@ -61,10 +61,12 @@ public class Client implements  ITestable {
                 bookedVipRoom = false;
 
                 for (Reservation reservation : reservationSet.getReservations()) {
+                    if(reservation.getBookings() != null && reservation.getBookings().getRoom() != null ){
 
-                    if (reservation.getBookings().getRoom().getRoomCategory().getType() == RoomCategory.RoomType.VIP) {
-                       bookedVipRoom =true;
-                       break;
+                        if (reservation.getBookings().getRoom().getRoomCategory().getType() == RoomCategory.RoomType.VIP) {
+                           bookedVipRoom =true;
+                           break;
+                        }
                     }
                 }
                 if (!bookedVipRoom)
